@@ -40,7 +40,7 @@ export default function Toast({ message, type, duration = 5000, onClose }: Toast
 
   return (
     <div
-      className={`fixed top-4 right-4 z-50 glass-card border ${colors[type]} max-w-sm transition-all duration-300 ${
+      className={`fixed top-4 right-4 z-50 glass-card border ${colors[type]} min-w-80 max-w-md transition-all duration-300 ${
         isVisible ? 'translate-x-0 opacity-100' : 'translate-x-full opacity-0'
       }`}
     >

@@ -44,6 +44,10 @@ export default function Home() {
   const [walletAddress, setWalletAddress] = useState('')
   const [currentFileName, setCurrentFileName] = useState('MyContract.sol')
   const [isNewFileModalOpen, setIsNewFileModalOpen] = useState(false)
+  const [openFiles, setOpenFiles] = useState<string[]>(['MyContract.sol'])
+  const [fileContents, setFileContents] = useState<Record<string, string>>({
+    'MyContract.sol': defaultContract
+  })
   const { showToast } = useToast()
 
   return (
@@ -51,12 +55,7 @@ export default function Home() {
       {/* IDE Header/Menu Bar */}
       <div className="bg-[#2d2d30] border-b border-[#3e3e42] px-4 py-2 flex items-center justify-between">
         <div className="flex items-center space-x-4">
-          <div className="flex items-center space-x-2">
-            <div className="w-6 h-6 bg-gradient-to-r from-blue-500 to-purple-500 rounded flex items-center justify-center">
-              <span className="text-white text-xs font-bold">CC</span>
-            </div>
-            <span className="font-semibold text-sm">Creditcoin IDE</span>
-          </div>
+          <span className="font-semibold text-sm">Creditcoin IDE</span>
           
           {/* Menu Items */}
           <div className="flex items-center space-x-1 text-sm">
@@ -85,6 +84,14 @@ export default function Home() {
             <span className="text-gray-300">Creditcoin Testnet</span>
           </div>
           <a 
+            href="https://docs.creditcoin.org/" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            className="text-xs text-gray-400 hover:text-gray-200 transition-colors"
+          >
+            Docs ↗
+          </a>
+          <a 
             href="https://creditcoin-testnet.blockscout.com/" 
             target="_blank" 
             rel="noopener noreferrer"
@@ -97,21 +104,7 @@ export default function Home() {
 
       {/* Main IDE Layout */}
       <div className="flex-1 flex">
-        {/* Left Sidebar - Activity Bar */}
-        <div className="w-12 bg-[#2d2d30] border-r border-[#3e3e42] flex flex-col items-center py-4 space-y-4">
-          <button className="w-8 h-8 flex items-center justify-center text-gray-400 hover:text-white bg-[#37373d] rounded transition-colors">
-            📁
-          </button>
-          <button className="w-8 h-8 flex items-center justify-center text-gray-400 hover:text-white hover:bg-[#37373d] rounded transition-colors">
-            🔍
-          </button>
-          <button className="w-8 h-8 flex items-center justify-center text-gray-400 hover:text-white hover:bg-[#37373d] rounded transition-colors">
-            🔧
-          </button>
-          <button className="w-8 h-8 flex items-center justify-center text-gray-400 hover:text-white hover:bg-[#37373d] rounded transition-colors">
-            🚀
-          </button>
-        </div>
+
 
         {/* Explorer Panel */}
         <div className="w-64 bg-[#252526] border-r border-[#3e3e42] flex flex-col">
@@ -127,18 +120,25 @@ export default function Home() {
           </div>
           <div className="flex-1 p-2">
             <div className="space-y-1">
-              <div 
-                className={`flex items-center space-x-2 p-2 rounded cursor-pointer ${
-                  currentFileName === 'MyContract.sol' ? 'bg-[#37373d] text-white' : 'hover:bg-[#2a2d2e] text-gray-300'
-                }`}
-                onClick={() => {
-                  setCurrentFileName('MyContract.sol')
-                  setContractCode(defaultContract)
-                }}
-              >
-                <span className="text-xs">📄</span>
-                <span className="text-sm">MyContract.sol</span>
-              </div>
+              {/* Contract Files */}
+              {openFiles.map((fileName) => (
+                <div 
+                  key={fileName}
+                  className={`flex items-center space-x-2 p-2 rounded cursor-pointer ${
+                    currentFileName === fileName ? 'bg-[#37373d] text-white' : 'hover:bg-[#2a2d2e] text-gray-300'
+                  }`}
+                  onClick={() => {
+                    setCurrentFileName(fileName)
+                    const fileContent = fileContents[fileName] || ''
+                    setContractCode(fileContent)
+                  }}
+                >
+                  <span className="text-xs">📄</span>
+                  <span className="text-sm">{fileName}</span>
+                </div>
+              ))}
+              
+              {/* Static Files */}
               <div className="flex items-center space-x-2 p-2 hover:bg-[#2a2d2e] rounded cursor-pointer text-gray-500">
                 <span className="text-xs">⚙️</span>
                 <span className="text-sm">hardhat.config.js</span>
@@ -169,8 +169,14 @@ export default function Home() {
             {/* Code Editor */}
             <div className="flex-1 bg-[#1e1e1e]">
               <CodeEditor
-                value={contractCode}
-                onChange={setContractCode}
+                value={fileContents[currentFileName] || ''}
+                onChange={(newCode) => {
+                  setContractCode(newCode)
+                  setFileContents(prev => ({
+                    ...prev,
+                    [currentFileName]: newCode
+                  }))
+                }}
                 language="solidity"
                 height="calc(100vh - 120px)"
               />
@@ -333,14 +339,22 @@ export default function Home() {
         isOpen={isNewFileModalOpen}
         onClose={() => setIsNewFileModalOpen(false)}
         onConfirm={(fileName) => {
-          setCurrentFileName(fileName + '.sol')
-          setContractCode(`// SPDX-License-Identifier: MIT
+          const newFileName = fileName + '.sol'
+          const newFileContent = `// SPDX-License-Identifier: MIT
 pragma solidity ^0.8.19;
 
 contract ${fileName} {
     // Your contract code here
-}`)
-          showToast(`Created new contract: ${fileName}.sol`, 'success')
+}`
+          
+          setCurrentFileName(newFileName)
+          setOpenFiles(prev => [...prev, newFileName])
+          setFileContents(prev => ({
+            ...prev,
+            [newFileName]: newFileContent
+          }))
+          setContractCode(newFileContent)
+          showToast(`Created new contract: ${newFileName}`, 'success')
         }}
       />
     </div>

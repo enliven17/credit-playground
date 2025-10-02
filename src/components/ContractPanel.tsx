@@ -192,7 +192,7 @@ export default function ContractPanel({
 
           {/* Deployment Result */}
           {deploymentResult && (
-            <div className={`glass p-3 rounded-lg border max-h-96 overflow-y-auto ${
+            <div className={`glass p-3 rounded-lg border ${
               deploymentResult.success ? 'border-green-500/50 bg-green-900/20' : 'border-red-500/50 bg-red-900/20'
             }`}>
               <div className="flex items-center space-x-2 mb-3">
@@ -202,69 +202,35 @@ export default function ContractPanel({
                   <XCircleIcon className="h-4 w-4 text-red-400" />
                 )}
                 <span className="font-medium text-white text-sm">
-                  {deploymentResult.success ? '🎉 Deployed' : '❌ Failed'}
+                  {deploymentResult.success ? '🎉 Contract Deployed!' : '❌ Deployment Failed'}
                 </span>
               </div>
               
               {deploymentResult.error && (
-                <div className="text-xs text-red-300 bg-red-900/30 p-2 rounded max-h-20 overflow-y-auto">
+                <div className="text-xs text-red-300 bg-red-900/30 p-2 rounded">
                   {deploymentResult.error}
                 </div>
               )}
               
-              {deploymentResult.success && (
-                <div className="space-y-2">
-                  <div className="bg-green-900/30 p-2 rounded">
-                    <div className="text-green-300 font-medium text-xs mb-1">📍 Contract:</div>
-                    <div className="flex items-center space-x-2">
-                      <code className="text-xs font-mono flex-1 text-white break-all">
-                        {deploymentResult.contractAddress}
-                      </code>
-                      <button
-                        onClick={() => copyToClipboard(deploymentResult.contractAddress)}
-                        className="text-green-400 hover:text-green-300 p-1"
-                      >
-                        <ClipboardDocumentIcon className="h-3 w-3" />
-                      </button>
-                    </div>
-                  </div>
-                  
-                  <div className="bg-blue-900/30 p-2 rounded">
-                    <div className="text-blue-300 font-medium text-xs mb-1">🔗 Transaction:</div>
-                    <div className="flex items-center space-x-2">
-                      <code className="text-xs font-mono flex-1 text-white break-all">
-                        {deploymentResult.transactionHash}
-                      </code>
-                      <button
-                        onClick={() => copyToClipboard(deploymentResult.transactionHash)}
-                        className="text-blue-400 hover:text-blue-300 p-1"
-                      >
-                        <ClipboardDocumentIcon className="h-3 w-3" />
-                      </button>
-                    </div>
-                  </div>
-
-                  {deploymentResult.networkInfo && (
-                    <div className="space-y-1">
-                      <a
-                        href={deploymentResult.networkInfo.explorerUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="btn-secondary w-full justify-center text-xs py-2"
-                      >
-                        📄 View Contract
-                      </a>
-                      {deploymentResult.networkInfo.txExplorerUrl && (
-                        <a
-                          href={deploymentResult.networkInfo.txExplorerUrl}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="btn-secondary w-full justify-center text-xs py-2"
-                        >
-                          🔗 View Transaction
-                        </a>
-                      )}
-                    </div>
+              {deploymentResult.success && deploymentResult.networkInfo && (
+                <div className="flex space-x-2">
+                  <a
+                    href={deploymentResult.networkInfo.explorerUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex-1 text-center px-2 py-1 text-xs bg-white/10 hover:bg-white/20 rounded transition-colors"
+                  >
+                    📄 Contract
+                  </a>
+                  {deploymentResult.networkInfo.txExplorerUrl && (
+                    <a
+                      href={deploymentResult.networkInfo.txExplorerUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex-1 text-center px-2 py-1 text-xs bg-white/10 hover:bg-white/20 rounded transition-colors"
+                    >
+                      🔗 Transaction
+                    </a>
                   )}
                 </div>
               )}
