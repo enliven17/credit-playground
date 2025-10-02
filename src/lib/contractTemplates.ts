@@ -4,7 +4,7 @@ export const CONTRACT_TEMPLATES: ContractTemplate[] = [
   {
     name: 'Simple Token',
     category: 'token',
-    description: 'Basit ERC20 benzeri token contract',
+    description: 'Basic ERC20-like token contract',
     code: `// SPDX-License-Identifier: MIT
 pragma solidity ^0.8.19;
 
@@ -60,7 +60,7 @@ contract SimpleToken {
   {
     name: 'Credit Score Manager',
     category: 'utility',
-    description: 'Kredi puanı yönetimi için contract',
+    description: 'Contract for credit score management',
     code: `// SPDX-License-Identifier: MIT
 pragma solidity ^0.8.19;
 
@@ -126,7 +126,7 @@ contract CreditScoreManager {
   {
     name: 'Simple Voting',
     category: 'governance',
-    description: 'Basit oylama sistemi',
+    description: 'Basic voting system',
     code: `// SPDX-License-Identifier: MIT
 pragma solidity ^0.8.19;
 
@@ -209,7 +209,7 @@ contract SimpleVoting {
   {
     name: 'Simple Marketplace',
     category: 'defi',
-    description: 'Basit NFT marketplace',
+    description: 'Basic NFT marketplace',
     code: `// SPDX-License-Identifier: MIT
 pragma solidity ^0.8.19;
 

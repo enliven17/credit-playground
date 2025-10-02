@@ -14,7 +14,7 @@ export default function TemplateSelector({ onSelectTemplate }: TemplateSelectorP
   const [selectedCategory, setSelectedCategory] = useState<string>('all')
 
   const categories = [
-    { id: 'all', name: 'Tüm Kategoriler' },
+    { id: 'all', name: 'All Categories' },
     { id: 'token', name: 'Token Contracts' },
     { id: 'defi', name: 'DeFi Contracts' },
     { id: 'nft', name: 'NFT Contracts' },
@@ -34,7 +34,7 @@ export default function TemplateSelector({ onSelectTemplate }: TemplateSelectorP
       >
         <div className="flex items-center space-x-2">
           <DocumentTextIcon className="h-4 w-4" />
-          <span>Template Seç</span>
+          <span>Select Template</span>
         </div>
         <ChevronDownIcon className={`h-4 w-4 transition-transform ${isOpen ? 'rotate-180' : ''}`} />
       </button>
@@ -60,7 +60,7 @@ export default function TemplateSelector({ onSelectTemplate }: TemplateSelectorP
           <div className="max-h-64 overflow-y-auto">
             {filteredTemplates.length === 0 ? (
               <div className="p-4 text-center text-gray-500 dark:text-gray-400">
-                Bu kategoride template bulunamadı
+                No templates found in this category
               </div>
             ) : (
               filteredTemplates.map((template, index) => (

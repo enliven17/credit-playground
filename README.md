@@ -1,45 +1,45 @@
 # Creditcoin Playground
 
-Creditcoin Testnet için geliştirilmiş smart contract playground'u. Kullanıcılar smart contract yazabilir, derleyebilir ve Creditcoin testnet'ine deploy edebilir.
+A smart contract playground developed for Creditcoin Testnet. Users can write, compile, and deploy smart contracts to Creditcoin testnet.
 
-## Özellikler
+## Features
 
-- 🔧 **Smart Contract Editor**: Monaco Editor ile Solidity syntax highlighting
-- ⚡ **Hızlı Derleme**: Hardhat ile otomatik contract derleme
-- 🚀 **Testnet Deploy**: Creditcoin testnet'ine tek tıkla deployment
-- 🔍 **Explorer Entegrasyonu**: Deploy edilen contractları explorer'da görüntüleme
-- 📱 **Responsive Design**: Mobil ve desktop uyumlu arayüz
+- 🔧 **Smart Contract Editor**: Solidity syntax highlighting with Monaco Editor
+- ⚡ **Fast Compilation**: Automatic contract compilation with Hardhat
+- 🚀 **Testnet Deploy**: One-click deployment to Creditcoin testnet
+- 🔍 **Explorer Integration**: View deployed contracts in the explorer
+- 📱 **Responsive Design**: Mobile and desktop compatible interface
 
-## Kurulum
+## Installation
 
-1. **Repository'yi klonlayın:**
+1. **Clone the repository:**
 ```bash
 git clone <repository-url>
 cd creditcoin-playground
 ```
 
-2. **Bağımlılıkları yükleyin:**
+2. **Install dependencies:**
 ```bash
 npm install
 ```
 
-3. **Environment dosyasını oluşturun:**
+3. **Create environment file:**
 ```bash
 cp .env.example .env.local
 ```
 
-4. **Private key'inizi ekleyin:**
-`.env.local` dosyasında `PRIVATE_KEY` değişkenini kendi private key'iniz ile değiştirin.
+4. **Add your private key:**
+Replace the `PRIVATE_KEY` variable in `.env.local` with your own private key.
 
-⚠️ **Güvenlik Uyarısı**: Sadece testnet için kullanacağınız bir wallet'ın private key'ini kullanın!
+⚠️ **Security Warning**: Only use a private key from a wallet intended for testnet use!
 
-## Creditcoin Testnet Kurulumu
+## Creditcoin Testnet Setup
 
-### MetaMask'a Creditcoin Testnet Ekleme
+### Adding Creditcoin Testnet to MetaMask
 
-1. MetaMask'ı açın
-2. Network dropdown'ından "Add Network" seçin
-3. Aşağıdaki bilgileri girin:
+1. Open MetaMask
+2. Select "Add Network" from the network dropdown
+3. Enter the following information:
 
 ```
 Network Name: Creditcoin Testnet
@@ -49,39 +49,39 @@ Currency Symbol: CTC
 Block Explorer: https://explorer.cc3-testnet.creditcoin.network
 ```
 
-### Test Token Alma
+### Getting Test Tokens
 
-Creditcoin testnet tokenları almak için:
-1. [Creditcoin Discord](https://discord.gg/creditcoin) kanalına katılın
-2. Faucet kanalında wallet adresinizi paylaşın
-3. Veya [resmi dokümantasyonu](https://docs.creditcoin.org/) kontrol edin
+To get Creditcoin testnet tokens:
+1. Join the [Creditcoin Discord](https://discord.gg/creditcoin) channel
+2. Share your wallet address in the faucet channel
+3. Or check the [official documentation](https://docs.creditcoin.org/)
 
-## Kullanım
+## Usage
 
-1. **Development server'ı başlatın:**
+1. **Start the development server:**
 ```bash
 npm run dev
 ```
 
-2. **Browser'da açın:**
+2. **Open in browser:**
 http://localhost:3000
 
-3. **Smart Contract yazın:**
-- Sol panelde contract kodunuzu yazın
-- Örnek template'ler mevcuttur
+3. **Write Smart Contract:**
+- Write your contract code in the left panel
+- Example templates are available
 
-4. **Compile edin:**
-- "Compile" butonuna tıklayın
-- Hataları kontrol edin
+4. **Compile:**
+- Click the "Compile" button
+- Check for errors
 
-5. **Deploy edin:**
-- "Deploy" sekmesine geçin
-- "Deploy" butonuna tıklayın
-- Contract adresi ve transaction hash'i alın
+5. **Deploy:**
+- Switch to the "Deploy" tab
+- Click the "Deploy" button
+- Get the contract address and transaction hash
 
-## Örnek Contractlar
+## Example Contracts
 
-### Basit Token Contract
+### Simple Token Contract
 ```solidity
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.19;
@@ -186,14 +186,14 @@ Derlenmiş contractı deploy eder.
 - **Smart Contracts**: Hardhat, Solidity 0.8.19
 - **Network**: Creditcoin Testnet
 
-## Geliştirme
+## Development
 
 ### Local Development
 ```bash
 # Development server
 npm run dev
 
-# Contract derleme
+# Contract compilation
 npm run compile
 
 # Contract deploy (testnet)
@@ -203,52 +203,52 @@ npm run deploy
 npm run lint
 ```
 
-### Yeni Özellik Ekleme
+### Adding New Features
 
-1. `src/components/` altında yeni component oluşturun
-2. `src/app/api/` altında yeni API endpoint ekleyin
-3. `src/types/` altında type tanımlarını güncelleyin
+1. Create new components in `src/components/`
+2. Add new API endpoints in `src/app/api/`
+3. Update type definitions in `src/types/`
 
 ## Troubleshooting
 
-### Compilation Hatası
-- Solidity syntax'ını kontrol edin
-- Pragma version'ının doğru olduğundan emin olun
-- Import path'lerini kontrol edin
+### Compilation Error
+- Check Solidity syntax
+- Ensure pragma version is correct
+- Check import paths
 
-### Deployment Hatası
-- Private key'in doğru olduğundan emin olun
-- Wallet'ta yeterli CTC token olduğunu kontrol edin
-- Network bağlantısını kontrol edin
+### Deployment Error
+- Ensure private key is correct
+- Check that wallet has sufficient CTC tokens
+- Check network connection
 
-### MetaMask Bağlantı Sorunu
-- Network ayarlarını kontrol edin
-- Chain ID'nin 102031 olduğundan emin olun
-- RPC URL'in doğru olduğunu kontrol edin
+### MetaMask Connection Issue
+- Check network settings
+- Ensure Chain ID is 102031
+- Verify RPC URL is correct
 
-## Katkıda Bulunma
+## Contributing
 
-1. Fork edin
-2. Feature branch oluşturun (`git checkout -b feature/amazing-feature`)
-3. Commit edin (`git commit -m 'Add amazing feature'`)
-4. Push edin (`git push origin feature/amazing-feature`)
-5. Pull Request açın
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
 
-## Lisans
+## License
 
-MIT License - detaylar için [LICENSE](LICENSE) dosyasına bakın.
+MIT License - see [LICENSE](LICENSE) file for details.
 
-## Bağlantılar
+## Links
 
-- [Creditcoin Resmi Website](https://creditcoin.org/)
-- [Creditcoin Dokümantasyon](https://docs.creditcoin.org/)
+- [Creditcoin Official Website](https://creditcoin.org/)
+- [Creditcoin Documentation](https://docs.creditcoin.org/)
 - [Creditcoin Explorer](https://explorer.cc3-testnet.creditcoin.network/)
 - [Creditcoin Discord](https://discord.gg/creditcoin)
 - [GitHub Repository](https://github.com/creditcoin-org)
 
-## Destek
+## Support
 
-Sorularınız için:
-- GitHub Issues açın
-- Discord kanalına katılın
-- Dokümantasyonu kontrol edin
+For questions:
+- Open GitHub Issues
+- Join Discord channel
+- Check documentation
