@@ -72,31 +72,42 @@ export default function CodeEditor({
   }
 
   return (
-    <div className="border border-gray-300 dark:border-gray-600 rounded-lg overflow-hidden">
-      <Editor
-        height={height}
-        language={language}
-        value={value}
-        onChange={(value) => onChange(value || '')}
-        onMount={handleEditorDidMount}
-        options={{
-          minimap: { enabled: false },
-          fontSize: 14,
-          lineNumbers: 'on',
-          roundedSelection: false,
-          scrollBeyondLastLine: false,
-          automaticLayout: true,
-          tabSize: 2,
-          insertSpaces: true,
-          wordWrap: 'on',
-          contextmenu: true,
-          selectOnLineNumbers: true,
-          glyphMargin: false,
-          folding: true,
-          lineDecorationsWidth: 10,
-          lineNumbersMinChars: 3,
-        }}
-      />
+    <div className="relative">
+      <div className="glass border border-white/20 rounded-2xl overflow-hidden shadow-2xl">
+        <Editor
+          height={height}
+          language={language}
+          value={value}
+          onChange={(value) => onChange(value || '')}
+          onMount={handleEditorDidMount}
+          options={{
+            minimap: { enabled: false },
+            fontSize: 15,
+            lineNumbers: 'on',
+            roundedSelection: false,
+            scrollBeyondLastLine: false,
+            automaticLayout: true,
+            tabSize: 2,
+            insertSpaces: true,
+            wordWrap: 'on',
+            contextmenu: true,
+            selectOnLineNumbers: true,
+            glyphMargin: false,
+            folding: true,
+            lineDecorationsWidth: 12,
+            lineNumbersMinChars: 3,
+            fontFamily: 'JetBrains Mono, Fira Code, Monaco, Consolas, monospace',
+            fontLigatures: true,
+            cursorBlinking: 'smooth',
+            cursorSmoothCaretAnimation: 'on',
+            smoothScrolling: true,
+            padding: { top: 20, bottom: 20 },
+          }}
+        />
+      </div>
+      {/* Decorative elements */}
+      <div className="absolute -top-2 -left-2 w-4 h-4 bg-gradient-to-br from-creditcoin-400 to-creditcoin-600 rounded-full opacity-60 animate-pulse"></div>
+      <div className="absolute -bottom-2 -right-2 w-6 h-6 bg-gradient-to-br from-purple-400 to-pink-600 rounded-full opacity-40 animate-pulse" style={{ animationDelay: '1s' }}></div>
     </div>
   )
 }

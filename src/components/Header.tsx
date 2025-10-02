@@ -7,46 +7,46 @@ export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
 
   return (
-    <header className="bg-white dark:bg-gray-800 shadow-sm border-b border-gray-200 dark:border-gray-700">
+    <header className="glass-header shadow-lg border-b border-white/20 sticky top-0 z-50">
       <div className="container mx-auto px-4">
-        <div className="flex justify-between items-center h-16">
+        <div className="flex justify-between items-center h-20">
           {/* Logo */}
-          <div className="flex items-center space-x-3">
-            <div className="w-8 h-8 bg-creditcoin-600 rounded-lg flex items-center justify-center">
-              <span className="text-white font-bold text-sm">CC</span>
+          <div className="flex items-center space-x-4 hover-lift">
+            <div className="w-12 h-12 bg-gradient-to-br from-creditcoin-500 to-creditcoin-600 rounded-2xl flex items-center justify-center shadow-lg hover-glow">
+              <span className="text-white font-bold text-lg">CC</span>
             </div>
             <div>
-              <h1 className="text-xl font-bold text-gray-900 dark:text-white">
+              <h1 className="text-2xl font-bold text-white drop-shadow-lg">
                 Creditcoin Playground
               </h1>
-              <p className="text-xs text-gray-500 dark:text-gray-400">
+              <p className="text-sm text-white/80">
                 Testnet Smart Contract IDE
               </p>
             </div>
           </div>
 
           {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center space-x-6">
+          <nav className="hidden md:flex items-center space-x-8">
             <a 
               href="https://docs.creditcoin.org/" 
               target="_blank" 
               rel="noopener noreferrer"
-              className="text-gray-600 dark:text-gray-300 hover:text-creditcoin-600 dark:hover:text-creditcoin-400 transition-colors"
+              className="text-white/90 hover:text-white transition-all duration-300 font-medium hover:scale-105"
             >
               Documentation
             </a>
             <a 
-              href="https://explorer.cc3-testnet.creditcoin.network/" 
+              href="https://creditcoin-testnet.blockscout.com/" 
               target="_blank" 
               rel="noopener noreferrer"
-              className="text-gray-600 dark:text-gray-300 hover:text-creditcoin-600 dark:hover:text-creditcoin-400 transition-colors"
+              className="text-white/90 hover:text-white transition-all duration-300 font-medium hover:scale-105"
             >
               Explorer
             </a>
-            <div className="flex items-center space-x-2">
-              <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-              <span className="text-sm text-gray-600 dark:text-gray-300">
-                Testnet
+            <div className="flex items-center space-x-3 glass rounded-full px-4 py-2">
+              <div className="status-online"></div>
+              <span className="text-sm text-white font-medium">
+                Testnet Live
               </span>
             </div>
           </nav>
@@ -54,7 +54,7 @@ export default function Header() {
           {/* Mobile menu button */}
           <button
             onClick={() => setIsMenuOpen(!isMenuOpen)}
-            className="md:hidden p-2 rounded-md text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
+            className="md:hidden btn-icon text-white"
           >
             {isMenuOpen ? (
               <XMarkIcon className="h-6 w-6" />
@@ -66,27 +66,27 @@ export default function Header() {
 
         {/* Mobile Navigation */}
         {isMenuOpen && (
-          <div className="md:hidden py-4 border-t border-gray-200 dark:border-gray-700">
-            <nav className="flex flex-col space-y-3">
+          <div className="md:hidden py-6 border-t border-white/20 glass-card mt-4 mx-4 rounded-2xl">
+            <nav className="flex flex-col space-y-4 px-4">
               <a 
                 href="https://docs.creditcoin.org/" 
                 target="_blank" 
                 rel="noopener noreferrer"
-                className="text-gray-600 dark:text-gray-300 hover:text-creditcoin-600 dark:hover:text-creditcoin-400 transition-colors"
+                className="text-white/90 hover:text-white transition-all duration-300 font-medium py-2"
               >
                 Documentation
               </a>
               <a 
-                href="https://explorer.cc3-testnet.creditcoin.network/" 
+                href="https://creditcoin-testnet.blockscout.com/" 
                 target="_blank" 
                 rel="noopener noreferrer"
-                className="text-gray-600 dark:text-gray-300 hover:text-creditcoin-600 dark:hover:text-creditcoin-400 transition-colors"
+                className="text-white/90 hover:text-white transition-all duration-300 font-medium py-2"
               >
                 Explorer
               </a>
-              <div className="flex items-center space-x-2">
-                <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-                <span className="text-sm text-gray-600 dark:text-gray-300">
+              <div className="flex items-center space-x-3 py-2">
+                <div className="status-online"></div>
+                <span className="text-sm text-white font-medium">
                   Connected to Testnet
                 </span>
               </div>

@@ -3,7 +3,7 @@ import { ethers } from 'ethers'
 
 export async function POST(request: NextRequest) {
   try {
-    const { bytecode, abi } = await request.json()
+    const { bytecode, abi, privateKey } = await request.json()
 
     if (!bytecode || !abi) {
       return NextResponse.json(
@@ -12,12 +12,18 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // Check if private key is configured
-    const privateKey = process.env.PRIVATE_KEY
     if (!privateKey) {
       return NextResponse.json({
         success: false,
-        error: 'Private key not configured. Please set PRIVATE_KEY environment variable.'
+        error: 'Private key is required for deployment'
+      })
+    }
+
+    // Validate private key format
+    if (!privateKey.startsWith('0x') || privateKey.length !== 66) {
+      return NextResponse.json({
+        success: false,
+        error: 'Invalid private key format'
       })
     }
 
@@ -26,8 +32,8 @@ export async function POST(request: NextRequest) {
     const wallet = new ethers.Wallet(privateKey, provider)
 
     // Check wallet balance
-    const balance = await wallet.provider.getBalance(wallet.address)
-    if (balance === 0n) {
+    const balance = await provider.getBalance(wallet.address)
+    if (balance === BigInt(0)) {
       return NextResponse.json({
         success: false,
         error: `Insufficient balance. Please fund your wallet: ${wallet.address}`
@@ -55,7 +61,8 @@ export async function POST(request: NextRequest) {
       networkInfo: {
         chainId: 102031,
         networkName: 'Creditcoin Testnet',
-        explorerUrl: `https://explorer.cc3-testnet.creditcoin.network/address/${contractAddress}`
+        explorerUrl: `https://creditcoin-testnet.blockscout.com/address/${contractAddress}`,
+        txExplorerUrl: `https://creditcoin-testnet.blockscout.com/tx/${contract.deploymentTransaction()?.hash}`
       }
     })
 

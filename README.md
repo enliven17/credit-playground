@@ -46,7 +46,7 @@ Network Name: Creditcoin Testnet
 RPC URL: https://rpc.cc3-testnet.creditcoin.network
 Chain ID: 102031
 Currency Symbol: CTC
-Block Explorer: https://explorer.cc3-testnet.creditcoin.network
+Block Explorer: https://creditcoin-testnet.blockscout.com
 ```
 
 ### Getting Test Tokens
@@ -172,7 +172,7 @@ Derlenmiş contractı deploy eder.
   "transactionHash": "0x...",
   "networkInfo": {
     "chainId": 102031,
-    "explorerUrl": "https://explorer.cc3-testnet.creditcoin.network/address/0x..."
+    "explorerUrl": "https://creditcoin-testnet.blockscout.com/address/0x..."
   }
 }
 ```
@@ -242,7 +242,7 @@ MIT License - see [LICENSE](LICENSE) file for details.
 
 - [Creditcoin Official Website](https://creditcoin.org/)
 - [Creditcoin Documentation](https://docs.creditcoin.org/)
-- [Creditcoin Explorer](https://explorer.cc3-testnet.creditcoin.network/)
+- [Creditcoin Explorer](https://creditcoin-testnet.blockscout.com/)
 - [Creditcoin Discord](https://discord.gg/creditcoin)
 - [GitHub Repository](https://github.com/creditcoin-org)
 
