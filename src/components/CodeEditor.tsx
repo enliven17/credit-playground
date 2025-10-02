@@ -1,0 +1,102 @@
+'use client'
+
+import { Editor } from '@monaco-editor/react'
+import { useEffect, useRef } from 'react'
+
+interface CodeEditorProps {
+  value: string
+  onChange: (value: string) => void
+  language?: string
+  height?: string
+}
+
+export default function CodeEditor({ 
+  value, 
+  onChange, 
+  language = 'solidity',
+  height = '500px' 
+}: CodeEditorProps) {
+  const editorRef = useRef<any>(null)
+
+  function handleEditorDidMount(editor: any, monaco: any) {
+    editorRef.current = editor
+
+    // Configure Solidity language support
+    monaco.languages.register({ id: 'solidity' })
+    
+    monaco.languages.setMonarchTokensProvider('solidity', {
+      tokenizer: {
+        root: [
+          [/pragma\s+solidity/, 'keyword'],
+          [/contract\s+\w+/, 'keyword'],
+          [/function\s+\w+/, 'keyword'],
+          [/\b(uint256|uint|int|bool|address|string|bytes|mapping)\b/, 'type'],
+          [/\b(public|private|internal|external|pure|view|payable|constant)\b/, 'keyword'],
+          [/\b(if|else|for|while|do|break|continue|return|throw|emit|require|assert|revert)\b/, 'keyword'],
+          [/\b(true|false|null|undefined)\b/, 'constant'],
+          [/\/\/.*$/, 'comment'],
+          [/\/\*[\s\S]*?\*\//, 'comment'],
+          [/"([^"\\]|\\.)*$/, 'string.invalid'],
+          [/"/, 'string', '@string'],
+          [/\d+/, 'number'],
+        ],
+        string: [
+          [/[^\\"]+/, 'string'],
+          [/\\./, 'string.escape'],
+          [/"/, 'string', '@pop']
+        ]
+      }
+    })
+
+    // Set editor theme
+    monaco.editor.defineTheme('creditcoin-theme', {
+      base: 'vs-dark',
+      inherit: true,
+      rules: [
+        { token: 'keyword', foreground: '569CD6' },
+        { token: 'type', foreground: '4EC9B0' },
+        { token: 'string', foreground: 'CE9178' },
+        { token: 'comment', foreground: '6A9955' },
+        { token: 'number', foreground: 'B5CEA8' },
+      ],
+      colors: {
+        'editor.background': '#1E1E1E',
+        'editor.foreground': '#D4D4D4',
+        'editorLineNumber.foreground': '#858585',
+        'editor.selectionBackground': '#264F78',
+        'editor.inactiveSelectionBackground': '#3A3D41',
+      }
+    })
+
+    monaco.editor.setTheme('creditcoin-theme')
+  }
+
+  return (
+    <div className="border border-gray-300 dark:border-gray-600 rounded-lg overflow-hidden">
+      <Editor
+        height={height}
+        language={language}
+        value={value}
+        onChange={(value) => onChange(value || '')}
+        onMount={handleEditorDidMount}
+        options={{
+          minimap: { enabled: false },
+          fontSize: 14,
+          lineNumbers: 'on',
+          roundedSelection: false,
+          scrollBeyondLastLine: false,
+          automaticLayout: true,
+          tabSize: 2,
+          insertSpaces: true,
+          wordWrap: 'on',
+          contextmenu: true,
+          selectOnLineNumbers: true,
+          glyphMargin: false,
+          folding: true,
+          lineDecorationsWidth: 10,
+          lineNumbersMinChars: 3,
+        }}
+      />
+    </div>
+  )
+}
