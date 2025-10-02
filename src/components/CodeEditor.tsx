@@ -105,9 +105,6 @@ export default function CodeEditor({
           }}
         />
       </div>
-      {/* Decorative elements */}
-      <div className="absolute -top-2 -left-2 w-4 h-4 bg-gradient-to-br from-creditcoin-400 to-creditcoin-600 rounded-full opacity-60 animate-pulse"></div>
-      <div className="absolute -bottom-2 -right-2 w-6 h-6 bg-gradient-to-br from-purple-400 to-pink-600 rounded-full opacity-40 animate-pulse" style={{ animationDelay: '1s' }}></div>
     </div>
   )
 }

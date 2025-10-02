@@ -3,10 +3,10 @@
 import { useState } from 'react'
 import CodeEditor from '@/components/CodeEditor'
 import ContractPanel from '@/components/ContractPanel'
-import Header from '@/components/Header'
-import TemplateSelector from '@/components/TemplateSelector'
-import WalletInput from '@/components/WalletInput'
 
+
+import WalletInput from '@/components/WalletInput'
+import NewFileModal from '@/components/NewFileModal'
 import { useToast } from '@/contexts/ToastContext'
 
 const defaultContract = `// SPDX-License-Identifier: MIT
@@ -42,68 +42,158 @@ export default function Home() {
   const [deploymentResult, setDeploymentResult] = useState<any>(null)
   const [privateKey, setPrivateKey] = useState('')
   const [walletAddress, setWalletAddress] = useState('')
+  const [currentFileName, setCurrentFileName] = useState('MyContract.sol')
+  const [isNewFileModalOpen, setIsNewFileModalOpen] = useState(false)
   const { showToast } = useToast()
 
   return (
-    <div className="min-h-screen">
-      <Header />
-      
-      <main className="container mx-auto px-6 py-12">
-        {/* Hero Section */}
-        <div className="text-center mb-12">
-          <h1 className="text-5xl font-bold text-white mb-4 drop-shadow-lg">
-            Build on Creditcoin
-          </h1>
-          <p className="text-xl text-white/80 max-w-2xl mx-auto">
-            Write, compile, and deploy smart contracts to Creditcoin testnet with our modern IDE
-          </p>
+    <div className="min-h-screen bg-[#1e1e1e] text-white flex flex-col">
+      {/* IDE Header/Menu Bar */}
+      <div className="bg-[#2d2d30] border-b border-[#3e3e42] px-4 py-2 flex items-center justify-between">
+        <div className="flex items-center space-x-4">
+          <div className="flex items-center space-x-2">
+            <div className="w-6 h-6 bg-gradient-to-r from-blue-500 to-purple-500 rounded flex items-center justify-center">
+              <span className="text-white text-xs font-bold">CC</span>
+            </div>
+            <span className="font-semibold text-sm">Creditcoin IDE</span>
+          </div>
+          
+          {/* Menu Items */}
+          <div className="flex items-center space-x-1 text-sm">
+            <button className="px-3 py-1 hover:bg-[#3e3e42] rounded text-gray-300 hover:text-white transition-colors">
+              File
+            </button>
+            <button className="px-3 py-1 hover:bg-[#3e3e42] rounded text-gray-300 hover:text-white transition-colors">
+              Edit
+            </button>
+            <button className="px-3 py-1 hover:bg-[#3e3e42] rounded text-gray-300 hover:text-white transition-colors">
+              View
+            </button>
+            <button className="px-3 py-1 hover:bg-[#3e3e42] rounded text-gray-300 hover:text-white transition-colors">
+              Terminal
+            </button>
+            <button className="px-3 py-1 hover:bg-[#3e3e42] rounded text-gray-300 hover:text-white transition-colors">
+              Help
+            </button>
+          </div>
         </div>
 
-        {/* Main Layout */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-          {/* Left Column - Code Editor */}
-          <div className="lg:col-span-8" style={{ animation: 'slideInLeft 0.8s ease-out' }}>
-            <div className="glass-card hover-lift h-fit">
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-4 gap-4">
-                <h2 className="text-xl font-semibold text-white flex items-center space-x-2">
-                  <div className="w-6 h-6 bg-gradient-to-r from-blue-500 to-purple-500 rounded-lg flex items-center justify-center">
-                    <span className="text-white text-xs">📝</span>
-                  </div>
-                  <span>Smart Contract Editor</span>
-                </h2>
-                <div className="flex-shrink-0">
-                  <TemplateSelector 
-                    onSelectTemplate={(template) => setContractCode(template.code)}
-                  />
-                </div>
+        {/* Right side - Network status */}
+        <div className="flex items-center space-x-4">
+          <div className="flex items-center space-x-2 text-sm">
+            <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+            <span className="text-gray-300">Creditcoin Testnet</span>
+          </div>
+          <a 
+            href="https://creditcoin-testnet.blockscout.com/" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            className="text-xs text-gray-400 hover:text-gray-200 transition-colors"
+          >
+            Explorer ↗
+          </a>
+        </div>
+      </div>
+
+      {/* Main IDE Layout */}
+      <div className="flex-1 flex">
+        {/* Left Sidebar - Activity Bar */}
+        <div className="w-12 bg-[#2d2d30] border-r border-[#3e3e42] flex flex-col items-center py-4 space-y-4">
+          <button className="w-8 h-8 flex items-center justify-center text-gray-400 hover:text-white bg-[#37373d] rounded transition-colors">
+            📁
+          </button>
+          <button className="w-8 h-8 flex items-center justify-center text-gray-400 hover:text-white hover:bg-[#37373d] rounded transition-colors">
+            🔍
+          </button>
+          <button className="w-8 h-8 flex items-center justify-center text-gray-400 hover:text-white hover:bg-[#37373d] rounded transition-colors">
+            🔧
+          </button>
+          <button className="w-8 h-8 flex items-center justify-center text-gray-400 hover:text-white hover:bg-[#37373d] rounded transition-colors">
+            🚀
+          </button>
+        </div>
+
+        {/* Explorer Panel */}
+        <div className="w-64 bg-[#252526] border-r border-[#3e3e42] flex flex-col">
+          <div className="p-3 border-b border-[#3e3e42] flex items-center justify-between">
+            <h3 className="text-xs font-semibold text-gray-300 uppercase tracking-wide">Explorer</h3>
+            <button 
+              onClick={() => setIsNewFileModalOpen(true)}
+              className="text-gray-400 hover:text-white text-lg hover:bg-[#3e3e42] w-6 h-6 rounded flex items-center justify-center transition-colors"
+              title="New File"
+            >
+              +
+            </button>
+          </div>
+          <div className="flex-1 p-2">
+            <div className="space-y-1">
+              <div 
+                className={`flex items-center space-x-2 p-2 rounded cursor-pointer ${
+                  currentFileName === 'MyContract.sol' ? 'bg-[#37373d] text-white' : 'hover:bg-[#2a2d2e] text-gray-300'
+                }`}
+                onClick={() => {
+                  setCurrentFileName('MyContract.sol')
+                  setContractCode(defaultContract)
+                }}
+              >
+                <span className="text-xs">📄</span>
+                <span className="text-sm">MyContract.sol</span>
               </div>
-              <div className="relative">
-                <CodeEditor
-                  value={contractCode}
-                  onChange={setContractCode}
-                  language="solidity"
-                  height="600px"
-                />
-                <div className="absolute -inset-1 bg-gradient-to-r from-creditcoin-500 to-purple-600 rounded-2xl blur opacity-20 -z-10"></div>
+              <div className="flex items-center space-x-2 p-2 hover:bg-[#2a2d2e] rounded cursor-pointer text-gray-500">
+                <span className="text-xs">⚙️</span>
+                <span className="text-sm">hardhat.config.js</span>
+              </div>
+              <div className="flex items-center space-x-2 p-2 hover:bg-[#2a2d2e] rounded cursor-pointer text-gray-500">
+                <span className="text-xs">📦</span>
+                <span className="text-sm">package.json</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Main Content Area */}
+        <div className="flex-1 flex flex-col">
+          {/* Tab Bar */}
+          <div className="bg-[#2d2d30] border-b border-[#3e3e42] flex items-center px-2">
+            <div className="flex items-center bg-[#1e1e1e] border-r border-[#3e3e42]">
+              <div className="flex items-center space-x-2 px-4 py-2 bg-[#1e1e1e] text-white border-t-2 border-blue-500">
+                <span className="text-xs">📄</span>
+                <span className="text-sm">{currentFileName}</span>
+                <button className="text-gray-400 hover:text-white ml-2">×</button>
               </div>
             </div>
           </div>
 
-          {/* Right Column - Controls */}
-          <div className="lg:col-span-4 space-y-4" style={{ animation: 'slideInRight 0.8s ease-out' }}>
-            {/* Wallet Configuration */}
-            <div className="glass-card h-fit">
-              <WalletInput 
-                onWalletChange={(key, address) => {
-                  setPrivateKey(key)
-                  setWalletAddress(address)
-                }}
+          {/* Editor Area */}
+          <div className="flex-1 flex">
+            {/* Code Editor */}
+            <div className="flex-1 bg-[#1e1e1e]">
+              <CodeEditor
+                value={contractCode}
+                onChange={setContractCode}
+                language="solidity"
+                height="calc(100vh - 120px)"
               />
             </div>
 
-            {/* Control Panel */}
-            <div className="glass-card h-fit">
-              <ContractPanel
+            {/* Right Panel */}
+            <div className="w-80 bg-[#252526] border-l border-[#3e3e42] flex flex-col">
+              {/* Panel Header */}
+              <div className="bg-[#2d2d30] border-b border-[#3e3e42] px-4 py-3">
+                <h3 className="text-sm font-semibold text-gray-300">Contract Tools</h3>
+              </div>
+
+              {/* Panel Content */}
+              <div className="flex-1 overflow-y-auto">
+                <div className="p-4 space-y-4">
+                  <WalletInput 
+                    onWalletChange={(key, address) => {
+                      setPrivateKey(key)
+                      setWalletAddress(address)
+                    }}
+                  />
+                  
+                  <ContractPanel
               contractCode={contractCode}
               isCompiling={isCompiling}
               isDeploying={isDeploying}
@@ -183,10 +273,76 @@ export default function Home() {
               walletAddress={walletAddress}
               hasWallet={!!privateKey}
             />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Bottom Panel - Terminal/Output */}
+          <div className="h-48 bg-[#1e1e1e] border-t border-[#3e3e42] flex flex-col">
+            {/* Terminal Tabs */}
+            <div className="bg-[#2d2d30] border-b border-[#3e3e42] flex items-center px-2">
+              <button className="px-3 py-1 text-sm bg-[#1e1e1e] text-white border-t-2 border-green-500">
+                Terminal
+              </button>
+              <button className="px-3 py-1 text-sm text-gray-400 hover:text-white hover:bg-[#3e3e42] transition-colors">
+                Output
+              </button>
+              <button className="px-3 py-1 text-sm text-gray-400 hover:text-white hover:bg-[#3e3e42] transition-colors">
+                Problems
+              </button>
+            </div>
+
+            {/* Terminal Content */}
+            <div className="flex-1 p-4 font-mono text-sm text-gray-300 bg-[#1e1e1e] overflow-y-auto">
+              <div className="space-y-1">
+                <div className="text-green-400">$ creditcoin-playground</div>
+                <div className="text-gray-400">Welcome to Creditcoin Smart Contract IDE</div>
+                <div className="text-blue-400">Ready to compile and deploy contracts to Creditcoin testnet</div>
+                <div className="text-gray-500">Type 'help' for available commands</div>
+                <div className="flex items-center">
+                  <span className="text-green-400">$ </span>
+                  <div className="w-2 h-4 bg-white ml-1 animate-pulse"></div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
-      </main>
+      </div>
+
+      {/* Status Bar */}
+      <div className="bg-[#007acc] text-white px-4 py-1 flex items-center justify-between text-xs">
+        <div className="flex items-center space-x-4">
+          <span>Ln 1, Col 1</span>
+          <span>Solidity</span>
+          <span>UTF-8</span>
+          <span>CRLF</span>
+        </div>
+        <div className="flex items-center space-x-4">
+          <span>Chain ID: 102031</span>
+          <span>Gas Price: 20 gwei</span>
+          <span className="flex items-center space-x-1">
+            <div className="w-2 h-2 bg-green-400 rounded-full"></div>
+            <span>Connected</span>
+          </span>
+        </div>
+      </div>
+
+      {/* New File Modal */}
+      <NewFileModal
+        isOpen={isNewFileModalOpen}
+        onClose={() => setIsNewFileModalOpen(false)}
+        onConfirm={(fileName) => {
+          setCurrentFileName(fileName + '.sol')
+          setContractCode(`// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.19;
+
+contract ${fileName} {
+    // Your contract code here
+}`)
+          showToast(`Created new contract: ${fileName}.sol`, 'success')
+        }}
+      />
     </div>
   )
 }

@@ -43,7 +43,7 @@ export default function ContractPanel({
   return (
     <div className="space-y-4">
       {/* Tabs */}
-      <div className="flex space-x-1 glass rounded-xl p-1">
+      <div className="flex border-b border-[#3e3e42]">
         {[
           { id: 'compile', label: 'Compile', icon: PlayIcon },
           { id: 'deploy', label: 'Deploy', icon: RocketLaunchIcon },
@@ -52,14 +52,14 @@ export default function ContractPanel({
           <button
             key={id}
             onClick={() => setActiveTab(id as any)}
-            className={`flex items-center space-x-2 px-3 py-2 rounded-lg text-xs font-medium transition-all duration-300 flex-1 justify-center ${
+            className={`flex items-center space-x-2 px-3 py-2 text-xs font-medium transition-colors border-b-2 ${
               activeTab === id
-                ? 'bg-gradient-to-r from-creditcoin-500 to-creditcoin-600 text-white shadow-lg'
-                : 'text-white/70 hover:text-white hover:bg-white/10'
+                ? 'border-blue-500 text-white bg-[#1e1e1e]'
+                : 'border-transparent text-gray-400 hover:text-white hover:bg-[#3e3e42]'
             }`}
           >
             <Icon className="h-4 w-4" />
-            <span className="hidden sm:inline">{label}</span>
+            <span>{label}</span>
           </button>
         ))}
       </div>
@@ -68,11 +68,8 @@ export default function ContractPanel({
       {activeTab === 'compile' && (
         <div className="space-y-3">
           <div className="flex items-center justify-between">
-            <h3 className="text-lg font-semibold text-white flex items-center space-x-2">
-              <div className="w-6 h-6 bg-gradient-to-r from-green-500 to-blue-500 rounded-lg flex items-center justify-center">
-                <span className="text-white text-xs">⚡</span>
-              </div>
-              <span>Compile</span>
+            <h3 className="text-lg font-semibold text-white">
+              Compile
             </h3>
             <button
               onClick={onCompile}
@@ -124,11 +121,8 @@ export default function ContractPanel({
       {activeTab === 'deploy' && (
         <div className="space-y-3">
           <div className="flex items-center justify-between">
-            <h3 className="text-lg font-semibold text-white flex items-center space-x-2">
-              <div className="w-6 h-6 bg-gradient-to-r from-purple-500 to-pink-500 rounded-lg flex items-center justify-center">
-                <span className="text-white text-xs">🚀</span>
-              </div>
-              <span>Deploy</span>
+            <h3 className="text-lg font-semibold text-white">
+              Deploy
             </h3>
             <button
               onClick={onDeploy}
@@ -282,11 +276,8 @@ export default function ContractPanel({
       {/* Interact Tab */}
       {activeTab === 'interact' && (
         <div className="space-y-6">
-          <h3 className="text-2xl font-semibold text-white flex items-center space-x-3">
-            <div className="w-8 h-8 bg-gradient-to-r from-indigo-500 to-cyan-500 rounded-lg flex items-center justify-center">
-              <span className="text-white text-sm">⚡</span>
-            </div>
-            <span>Contract Interaction</span>
+          <h3 className="text-lg font-semibold text-white">
+            Contract Interaction
           </h3>
           
           {!deploymentResult?.success ? (

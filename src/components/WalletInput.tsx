@@ -59,15 +59,13 @@ export default function WalletInput({ onWalletChange }: WalletInputProps) {
   return (
     <div className="space-y-3">
       <div className="flex items-center space-x-2 mb-3">
-        <div className="w-6 h-6 bg-gradient-to-r from-yellow-500 to-orange-500 rounded-lg flex items-center justify-center">
-          <WalletIcon className="h-4 w-4 text-white" />
-        </div>
-        <h3 className="text-lg font-semibold text-white">Wallet</h3>
+        <WalletIcon className="h-4 w-4 text-gray-400" />
+        <h3 className="text-sm font-medium text-gray-300 uppercase tracking-wide">Wallet Configuration</h3>
       </div>
 
       <div className="space-y-3">
         <div>
-          <label className="block text-xs font-medium text-white/70 mb-1">
+          <label className="block text-xs font-medium text-gray-400 mb-2">
             Private Key
           </label>
           <div className="relative">
@@ -76,9 +74,9 @@ export default function WalletInput({ onWalletChange }: WalletInputProps) {
               value={privateKey}
               onChange={(e) => handlePrivateKeyChange(e.target.value)}
               placeholder="0x..."
-              className={`w-full p-2 pr-10 glass rounded-lg text-sm text-white placeholder-white/40 border ${
-                error ? 'border-red-500/50' : isValid ? 'border-green-500/50' : 'border-white/20'
-              } focus:border-creditcoin-400 focus:ring-1 focus:ring-creditcoin-400/50 transition-all duration-300`}
+              className={`w-full p-2 pr-10 bg-[#3c3c3c] border rounded text-sm text-white placeholder-gray-500 ${
+                error ? 'border-red-500' : isValid ? 'border-green-500' : 'border-[#5a5a5a]'
+              } focus:border-blue-500 focus:outline-none transition-colors`}
             />
             <button
               type="button"
@@ -101,26 +99,26 @@ export default function WalletInput({ onWalletChange }: WalletInputProps) {
         </div>
 
         {walletAddress && (
-          <div className="bg-green-900/20 p-3 rounded-lg border border-green-500/30">
-            <div className="flex items-center space-x-2 mb-1">
+          <div className="bg-[#2d4a2d] border border-green-600 rounded p-3">
+            <div className="flex items-center space-x-2 mb-2">
               <CheckCircleIcon className="h-4 w-4 text-green-400" />
-              <span className="text-green-300 font-medium text-sm">Connected</span>
+              <span className="text-green-300 font-medium text-sm">Wallet Connected</span>
             </div>
-            <div className="text-xs text-green-200">
-              <div className="font-mono bg-green-900/30 p-2 rounded text-xs break-all">
+            <div className="text-xs text-gray-300">
+              <div className="font-mono bg-[#1e1e1e] p-2 rounded text-xs break-all border border-[#3e3e42]">
                 {walletAddress}
               </div>
             </div>
           </div>
         )}
 
-        <div className="bg-yellow-900/20 p-3 rounded-lg border border-yellow-500/30">
+        <div className="bg-[#4a3d2d] border border-yellow-600 rounded p-3">
           <div className="flex items-start space-x-2">
             <span className="text-yellow-400 text-sm">⚠️</span>
             <div className="text-yellow-200 text-xs">
-              <div className="font-medium mb-1">Security:</div>
-              <div className="text-xs text-yellow-300/80">
-                Only use testnet keys. Never share your private key.
+              <div className="font-medium mb-1">Security Warning:</div>
+              <div className="text-xs text-yellow-300">
+                Only use testnet private keys. Never share your private key.
               </div>
             </div>
           </div>
