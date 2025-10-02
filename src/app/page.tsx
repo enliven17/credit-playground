@@ -48,7 +48,16 @@ export default function Home() {
   const [fileContents, setFileContents] = useState<Record<string, string>>({
     'MyContract.sol': defaultContract
   })
+  const [terminalLogs, setTerminalLogs] = useState<string[]>([
+    '$ creditcoin-playground',
+    'Welcome to Creditcoin Smart Contract IDE',
+    'Ready to compile and deploy contracts to Creditcoin testnet'
+  ])
   const { showToast } = useToast()
+
+  const addTerminalLog = (message: string) => {
+    setTerminalLogs(prev => [...prev, message])
+  }
 
   return (
     <div className="min-h-screen bg-[#1e1e1e] text-white flex flex-col">
@@ -207,6 +216,8 @@ export default function Home() {
               deploymentResult={deploymentResult}
               onCompile={async () => {
                 setIsCompiling(true)
+                addTerminalLog(`$ Compiling ${currentFileName}...`)
+                
                 try {
                   // Try simple compiler first, fallback to hardhat
                   let response = await fetch('/api/compile-simple', {
@@ -219,6 +230,7 @@ export default function Home() {
                   
                   // If simple compiler fails, try hardhat
                   if (!result.success) {
+                    addTerminalLog('Simple compiler failed, trying Hardhat...')
                     response = await fetch('/api/compile', {
                       method: 'POST',
                       headers: { 'Content-Type': 'application/json' },
@@ -230,13 +242,16 @@ export default function Home() {
                   setCompilationResult(result)
                   
                   if (result.success) {
+                    addTerminalLog('✅ Compilation successful!')
                     showToast('Contract compiled successfully!', 'success')
                   } else {
+                    addTerminalLog(`❌ Compilation failed: ${result.error}`)
                     showToast('Compilation failed', 'error')
                   }
                 } catch (error) {
                   const errorResult = { error: 'Compilation failed: ' + error }
                   setCompilationResult(errorResult)
+                  addTerminalLog(`❌ Compilation error: ${error}`)
                   showToast('Compilation error occurred', 'error')
                 } finally {
                   setIsCompiling(false)
@@ -250,6 +265,8 @@ export default function Home() {
                 }
                 
                 setIsDeploying(true)
+                addTerminalLog(`$ Deploying ${currentFileName} to Creditcoin testnet...`)
+                
                 try {
                   const response = await fetch('/api/deploy', {
                     method: 'POST',
@@ -264,13 +281,18 @@ export default function Home() {
                   setDeploymentResult(result)
                   
                   if (result.success) {
+                    addTerminalLog('🚀 Deployment successful!')
+                    addTerminalLog(`📍 Contract: ${result.contractAddress}`)
+                    addTerminalLog(`🔗 Transaction: ${result.transactionHash}`)
                     showToast('Contract deployed successfully!', 'success')
                   } else {
+                    addTerminalLog(`❌ Deployment failed: ${result.error}`)
                     showToast('Deployment failed', 'error')
                   }
                 } catch (error) {
                   const errorResult = { error: 'Deployment failed' }
                   setDeploymentResult(errorResult)
+                  addTerminalLog(`❌ Deployment error: ${error}`)
                   showToast('Deployment error occurred', 'error')
                 } finally {
                   setIsDeploying(false)
@@ -300,15 +322,24 @@ export default function Home() {
             </div>
 
             {/* Terminal Content */}
-            <div className="flex-1 p-4 font-mono text-sm text-gray-300 bg-[#1e1e1e] overflow-y-auto">
+            <div className="flex-1 p-3 font-mono text-xs text-gray-300 bg-[#1e1e1e] overflow-y-auto">
               <div className="space-y-1">
-                <div className="text-green-400">$ creditcoin-playground</div>
-                <div className="text-gray-400">Welcome to Creditcoin Smart Contract IDE</div>
-                <div className="text-blue-400">Ready to compile and deploy contracts to Creditcoin testnet</div>
-                <div className="text-gray-500">Type 'help' for available commands</div>
+                {terminalLogs.map((log, index) => (
+                  <div key={index} className={`${
+                    log.startsWith('$') ? 'text-green-400' : 
+                    log.includes('✅') ? 'text-green-300' :
+                    log.includes('❌') ? 'text-red-300' :
+                    log.includes('🚀') ? 'text-blue-300' :
+                    log.includes('📍') ? 'text-yellow-300' :
+                    log.includes('🔗') ? 'text-cyan-300' :
+                    'text-gray-400'
+                  }`}>
+                    {log}
+                  </div>
+                ))}
                 <div className="flex items-center">
                   <span className="text-green-400">$ </span>
-                  <div className="w-2 h-4 bg-white ml-1 animate-pulse"></div>
+                  <div className="w-1 h-3 bg-white ml-1 animate-pulse"></div>
                 </div>
               </div>
             </div>
