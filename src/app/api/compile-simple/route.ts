@@ -94,8 +94,9 @@ function generateMockABI(code: string): any[] {
   }
 
   // Extract functions
-  const functionMatches = code.matchAll(/function\s+(\w+)\s*\([^)]*\)\s*(public|private|internal|external)?\s*(view|pure|payable)?\s*(returns\s*\([^)]*\))?/g)
-  for (const match of functionMatches) {
+  const functionRegex = /function\s+(\w+)\s*\([^)]*\)\s*(public|private|internal|external)?\s*(view|pure|payable)?\s*(returns\s*\([^)]*\))?/g
+  let match
+  while ((match = functionRegex.exec(code)) !== null) {
     const name = match[1]
     const visibility = match[2] || 'public'
     const stateMutability = match[3] || 'nonpayable'
@@ -112,22 +113,24 @@ function generateMockABI(code: string): any[] {
   }
 
   // Extract public variables
-  const publicVarMatches = code.matchAll(/(\w+)\s+public\s+(\w+)/g)
-  for (const match of publicVarMatches) {
-    const name = match[2]
+  const publicVarRegex = /(\w+)\s+public\s+(\w+)/g
+  let varMatch
+  while ((varMatch = publicVarRegex.exec(code)) !== null) {
+    const name = varMatch[2]
     abi.push({
       type: 'function',
       name,
       inputs: [],
-      outputs: [{ type: match[1], name: '' }],
+      outputs: [{ type: varMatch[1], name: '' }],
       stateMutability: 'view'
     })
   }
 
   // Extract events
-  const eventMatches = code.matchAll(/event\s+(\w+)\s*\([^)]*\)/g)
-  for (const match of eventMatches) {
-    const name = match[1]
+  const eventRegex = /event\s+(\w+)\s*\([^)]*\)/g
+  let eventMatch
+  while ((eventMatch = eventRegex.exec(code)) !== null) {
+    const name = eventMatch[1]
     abi.push({
       type: 'event',
       name,

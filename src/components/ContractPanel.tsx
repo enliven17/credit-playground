@@ -241,7 +241,7 @@ export default function ContractPanel({
 
       {/* Interact Tab */}
       {activeTab === 'interact' && (
-        <div className="space-y-6">
+        <div className="space-y-4">
           <h3 className="text-lg font-semibold text-white">
             Contract Interaction
           </h3>
@@ -251,29 +251,18 @@ export default function ContractPanel({
               <div className="flex items-center space-x-3">
                 <ExclamationTriangleIcon className="h-6 w-6 text-yellow-400" />
                 <span className="text-yellow-200 font-medium">
-                  Deploy your contract first to interact with it
+                  Deploy contract first
                 </span>
               </div>
             </div>
           ) : (
-            <div className="glass-card text-center py-12">
-              <div className="text-6xl mb-4">🔧</div>
-              <div className="text-white/80 text-lg mb-2">
-                Contract Interaction Coming Soon
+            <div className="glass-card text-center py-8">
+              <div className="text-4xl mb-3">🔧</div>
+              <div className="text-white/80 text-base mb-1">
+                Coming Soon
               </div>
-              <div className="text-white/60 text-sm max-w-md mx-auto">
-                This feature will allow you to call contract functions directly from the playground with a beautiful interface.
-              </div>
-              <div className="mt-6 flex justify-center space-x-4">
-                <div className="glass px-4 py-2 rounded-xl text-sm text-white/70">
-                  📖 Read Functions
-                </div>
-                <div className="glass px-4 py-2 rounded-xl text-sm text-white/70">
-                  ✍️ Write Functions
-                </div>
-                <div className="glass px-4 py-2 rounded-xl text-sm text-white/70">
-                  📊 Events
-                </div>
+              <div className="text-white/60 text-sm">
+                Contract interaction interface
               </div>
             </div>
           )}
