@@ -261,6 +261,8 @@ async function callGroqAPI(message: string, contractCode?: string, conversationH
     }
 
     console.log('Using Groq API with key:', GROQ_API_KEY?.substring(0, 10) + '...')
+  console.log('Environment:', process.env.NODE_ENV)
+  console.log('All env keys:', Object.keys(process.env).filter(key => key.includes('GROQ')))
 
     try {
         const systemPrompt = `You are a Creditcoin AI Assistant, an expert in blockchain development and smart contracts specifically for the Creditcoin platform. 
