@@ -8,13 +8,15 @@ interface CodeEditorProps {
   onChange: (value: string) => void
   language?: string
   height?: string
+  onCursorPositionChange?: (line: number, column: number) => void
 }
 
 export default function CodeEditor({ 
   value, 
   onChange, 
   language = 'solidity',
-  height = '500px' 
+  height = '500px',
+  onCursorPositionChange
 }: CodeEditorProps) {
   const editorRef = useRef<any>(null)
 

@@ -48,6 +48,7 @@ export default function Home() {
   const [fileContents, setFileContents] = useState<Record<string, string>>({
     'MyContract.sol': defaultContract
   })
+  const [cursorPosition, setCursorPosition] = useState({ line: 1, column: 1 })
   const [terminalLogs, setTerminalLogs] = useState<string[]>([
     '$ creditcoin-playground',
     'Welcome to Creditcoin Smart Contract IDE',
@@ -64,7 +65,7 @@ export default function Home() {
       {/* IDE Header/Menu Bar */}
       <div className="bg-[#2d2d30] border-b border-[#3e3e42] px-4 py-2 flex items-center justify-between">
         <div className="flex items-center space-x-4">
-          <span className="font-semibold text-sm">Creditcoin IDE</span>
+          <span className="font-semibold text-sm">Creditcoin Playground</span>
           
           {/* Menu Items */}
           <div className="flex items-center space-x-1 text-sm">
