@@ -3,8 +3,7 @@
 import { useState } from 'react'
 import CodeEditor from '@/components/CodeEditor'
 import ContractPanel from '@/components/ContractPanel'
-
-
+import AIAssistant from '@/components/AIAssistant'
 import WalletInput from '@/components/WalletInput'
 import NewFileModal from '@/components/NewFileModal'
 import { useToast } from '@/contexts/ToastContext'
@@ -389,6 +388,9 @@ contract ${fileName} {
           showToast(`Created new contract: ${newFileName}`, 'success')
         }}
       />
+
+      {/* AI Assistant */}
+      <AIAssistant contractCode={contractCode} />
     </div>
   )
 }
