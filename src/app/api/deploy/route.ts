@@ -68,9 +68,9 @@ export async function POST(request: NextRequest) {
 
   } catch (error: any) {
     console.error('Deployment error:', error)
-    
+
     let errorMessage = 'Deployment failed'
-    
+
     if (error.code === 'INSUFFICIENT_FUNDS') {
       errorMessage = 'Insufficient funds for deployment'
     } else if (error.code === 'NETWORK_ERROR') {
