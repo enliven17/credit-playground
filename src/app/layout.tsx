@@ -7,6 +7,11 @@ const inter = Inter({ subsets: ['latin'] })
 export const metadata = {
   title: 'Creditcoin Playground',
   description: 'Smart Contract Playground for Creditcoin Testnet',
+  icons: {
+    icon: '/playground.ico',
+    shortcut: '/playground.ico',
+    apple: '/playground.ico',
+  },
 }
 
 export default function RootLayout({
