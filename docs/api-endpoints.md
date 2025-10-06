@@ -4,10 +4,10 @@
 
 ```mermaid
 graph TB
-    A[Frontend] --> B[/api/compile]
-    A --> C[/api/deploy]
-    A --> D[/api/ai-assistant]
-    A --> E[/api/debug-env]
+    A[Frontend] --> B["API: /compile"]
+    A --> C["API: /deploy"]
+    A --> D["API: /ai-assistant"]
+    A --> E["API: /debug-env"]
     
     B --> F[Solidity Compiler]
     C --> G[Web3 Provider]

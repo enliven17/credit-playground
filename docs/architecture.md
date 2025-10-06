@@ -15,18 +15,18 @@ graph TB
     C --> H[Deploy Tab]
     C --> I[Interact Tab]
     
-    G --> J[/api/compile]
-    H --> K[/api/deploy]
+    G --> J["API: /compile"]
+    H --> K["API: /deploy"]
     I --> L[Contract Functions]
     
-    D --> M[/api/ai-assistant]
+    D --> M["API: /ai-assistant"]
     M --> N[Groq API]
     M --> O[Rule-based Fallback]
     
     J --> P[Solidity Compiler]
     K --> Q[Creditcoin Testnet]
     
-    Q --> R[Chain ID: 102031]
+    Q --> R["Chain ID: 102031"]
     Q --> S[Block Explorer]
 ```
 
