@@ -97,7 +97,7 @@ export default function Home() {
             <button onClick={() => setIsNewFileModalOpen(true)} className="text-gray-400 hover:text-white">+</button>
           </div>
           <div className="flex-1 p-2">
-            {openFiles.map((fileName) => (
+            {openFiles.map((fileName: string) => (
               <div
                 key={fileName}
                 className={`flex items-center space-x-2 p-2 rounded cursor-pointer ${currentFileName === fileName ? 'bg-[#37373d] text-white' : 'hover:bg-[#2a2d2e] text-gray-300'}`}
@@ -120,9 +120,9 @@ export default function Home() {
             <div className="flex-1 bg-[#1e1e1e]">
               <CodeEditor
                 value={fileContents[currentFileName] || ''}
-                onChange={(newCode) => {
+                onChange={(newCode: string) => {
                   setContractCode(newCode)
-                  setFileContents(prev => ({ ...prev, [currentFileName]: newCode }))
+                  setFileContents((prev: Record<string, string>) => ({ ...prev, [currentFileName]: newCode }))
                 }}
                 onAskAI={handleAskAI}
                 language="solidity"
@@ -245,7 +245,7 @@ export default function Home() {
           <div className="h-48 bg-[#1e1e1e] border-t border-[#3e3e42] flex flex-col">
             <div className="bg-[#2d2d30] px-4 py-1 text-xs text-gray-400 border-b border-[#3e3e42]">Terminal</div>
             <div className="flex-1 p-3 font-mono text-xs overflow-y-auto space-y-1">
-              {terminalLogs.map((log, i) => (
+              {terminalLogs.map((log: string, i: number) => (
                 <div key={i} className={log.startsWith('$') ? 'text-green-400' : 'text-gray-300'}>{log}</div>
               ))}
             </div>

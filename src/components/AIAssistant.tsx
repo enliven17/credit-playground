@@ -1,5 +1,6 @@
 'use client'
 
+import * as React from 'react'
 import { useState, useRef, useEffect, forwardRef, useImperativeHandle } from 'react'
 import {
   ChatBubbleLeftRightIcon,
@@ -55,7 +56,7 @@ const AIAssistant = forwardRef<AIAssistantRef, AIAssistantProps>(({ contractCode
       timestamp: new Date()
     }
 
-    setMessages(prev => [...prev, userMessage])
+    setMessages((prev: Message[]) => [...prev, userMessage])
     setIsLoading(true)
 
     try {
@@ -80,7 +81,7 @@ const AIAssistant = forwardRef<AIAssistantRef, AIAssistantProps>(({ contractCode
         timestamp: new Date()
       }
 
-      setMessages(prev => [...prev, assistantMessage])
+      setMessages((prev: Message[]) => [...prev, assistantMessage])
     } catch (error) {
       const errorMessage: Message = {
         id: (Date.now() + 1).toString(),
@@ -88,7 +89,7 @@ const AIAssistant = forwardRef<AIAssistantRef, AIAssistantProps>(({ contractCode
         content: 'Sorry, I\'m having trouble connecting right now. Please try again later.',
         timestamp: new Date()
       }
-      setMessages(prev => [...prev, errorMessage])
+      setMessages((prev: Message[]) => [...prev, errorMessage])
     } finally {
       setIsLoading(false)
     }
@@ -158,8 +159,8 @@ const AIAssistant = forwardRef<AIAssistantRef, AIAssistantProps>(({ contractCode
                 >
                   <div
                     className={`max-w-[80%] p-3 rounded-2xl text-sm ${message.type === 'user'
-                        ? 'bg-blue-600 text-white'
-                        : 'bg-[#2d2d30] text-white border border-white/10 shadow-sm'
+                      ? 'bg-blue-600 text-white'
+                      : 'bg-[#2d2d30] text-white border border-white/10 shadow-sm'
                       }`}
                   >
                     <p className="whitespace-pre-wrap">{message.content}</p>
