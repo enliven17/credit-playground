@@ -3,7 +3,7 @@ import { ethers } from 'ethers'
 
 export async function POST(request: NextRequest) {
   try {
-    const { bytecode, abi, privateKey } = await request.json()
+    const { bytecode, abi, privateKey, constructorArgs = [] } = await request.json()
 
     if (!bytecode || !abi) {
       return NextResponse.json(
@@ -44,7 +44,7 @@ export async function POST(request: NextRequest) {
     const contractFactory = new ethers.ContractFactory(abi, bytecode, wallet)
 
     // Deploy contract
-    const contract = await contractFactory.deploy({
+    const contract = await contractFactory.deploy(...constructorArgs, {
       gasLimit: 3000000,
       gasPrice: ethers.parseUnits('20', 'gwei')
     })

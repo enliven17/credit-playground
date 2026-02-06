@@ -217,7 +217,7 @@ export default function Home() {
                   setIsCompiling(false)
                 }
               }}
-              onDeploy={async () => {
+              onDeploy={async (args: any[]) => {
                 if (!compilationResult?.success) return
                 setIsDeploying(true)
                 addTerminalLog(`$ Deploying ${currentFileName} to Creditcoin testnet...`)
@@ -238,7 +238,7 @@ export default function Home() {
                       signer
                     )
 
-                    const contract = await factory.deploy()
+                    const contract = await factory.deploy(...args)
                     addTerminalLog(`Transaction sent: ${contract.deploymentTransaction()?.hash}`)
                     addTerminalLog('Waiting for confirmation...')
 
@@ -257,7 +257,8 @@ export default function Home() {
                       body: JSON.stringify({
                         bytecode: compilationResult.bytecode,
                         abi: compilationResult.abi,
-                        privateKey: privateKey
+                        privateKey: privateKey,
+                        constructorArgs: args
                       })
                     })
                     result = await response.json()

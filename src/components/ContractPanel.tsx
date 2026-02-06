@@ -1,10 +1,10 @@
 'use client'
 
 import { useState } from 'react'
-import { 
-  PlayIcon, 
-  RocketLaunchIcon, 
-  CheckCircleIcon, 
+import {
+  PlayIcon,
+  RocketLaunchIcon,
+  CheckCircleIcon,
   XCircleIcon,
   ClipboardDocumentIcon,
   ExclamationTriangleIcon
@@ -18,7 +18,7 @@ interface ContractPanelProps {
   compilationResult: any
   deploymentResult: any
   onCompile: () => void
-  onDeploy: () => void
+  onDeploy: (args: any[]) => void
   walletAddress?: string
   hasWallet?: boolean
 }
@@ -35,10 +35,13 @@ export default function ContractPanel({
   hasWallet
 }: ContractPanelProps) {
   const [activeTab, setActiveTab] = useState<'compile' | 'deploy' | 'interact'>('compile')
+  const [constructorArgs, setConstructorArgs] = useState<Record<string, string>>({})
 
   const copyToClipboard = (text: string) => {
     navigator.clipboard.writeText(text)
   }
+
+  const constructorInputs = compilationResult?.abi?.find((item: any) => item.type === 'constructor')?.inputs || []
 
   return (
     <div className="space-y-4">
@@ -52,11 +55,10 @@ export default function ContractPanel({
           <button
             key={id}
             onClick={() => setActiveTab(id as any)}
-            className={`flex items-center space-x-2 px-3 py-2 text-xs font-medium transition-colors border-b-2 ${
-              activeTab === id
+            className={`flex items-center space-x-2 px-3 py-2 text-xs font-medium transition-colors border-b-2 ${activeTab === id
                 ? 'border-blue-500 text-white bg-[#1e1e1e]'
                 : 'border-transparent text-gray-400 hover:text-white hover:bg-[#3e3e42]'
-            }`}
+              }`}
           >
             <Icon className="h-4 w-4" />
             <span>{label}</span>
@@ -87,9 +89,8 @@ export default function ContractPanel({
 
           {/* Compilation Result */}
           {compilationResult && (
-            <div className={`glass p-3 rounded-lg border ${
-              compilationResult.success ? 'border-green-500/50 bg-green-900/20' : 'border-red-500/50 bg-red-900/20'
-            }`}>
+            <div className={`glass p-3 rounded-lg border ${compilationResult.success ? 'border-green-500/50 bg-green-900/20' : 'border-red-500/50 bg-red-900/20'
+              }`}>
               <div className="flex items-center space-x-2 mb-2">
                 {compilationResult.success ? (
                   <CheckCircleIcon className="h-4 w-4 text-green-400" />
@@ -100,13 +101,13 @@ export default function ContractPanel({
                   {compilationResult.success ? 'Success' : 'Failed'}
                 </span>
               </div>
-              
+
               {compilationResult.error && (
                 <div className="text-xs text-red-300 bg-red-900/30 p-2 rounded max-h-20 overflow-y-auto">
                   {compilationResult.error}
                 </div>
               )}
-              
+
               {compilationResult.success && (
                 <div className="text-xs text-green-300">
                   ✨ Ready for deployment
@@ -125,7 +126,10 @@ export default function ContractPanel({
               Deploy
             </h3>
             <button
-              onClick={onDeploy}
+              onClick={() => {
+                const args = constructorInputs.map((input: any) => constructorArgs[input.name] || '')
+                onDeploy(args)
+              }}
               disabled={isDeploying || !compilationResult?.success || !hasWallet}
               className="btn-primary disabled:opacity-50 disabled:cursor-not-allowed flex items-center space-x-2 px-4 py-2 text-sm"
             >
@@ -137,6 +141,30 @@ export default function ContractPanel({
               <span>{isDeploying ? 'Deploying...' : 'Deploy'}</span>
             </button>
           </div>
+
+          {/* Constructor Arguments */}
+          {compilationResult?.success && constructorInputs.length > 0 && (
+            <div className="space-y-2 p-3 bg-[#2d2d30] rounded-lg border border-[#3e3e42]">
+              <h4 className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2 flex items-center">
+                <ExclamationTriangleIcon className="h-3 w-3 mr-1 text-blue-400" />
+                Constructor Arguments
+              </h4>
+              {constructorInputs.map((input: any) => (
+                <div key={input.name} className="space-y-1">
+                  <label className="text-[10px] text-gray-400 ml-1">
+                    {input.name} <span className="text-blue-500">({input.type})</span>
+                  </label>
+                  <input
+                    type="text"
+                    placeholder={`Enter ${input.name}...`}
+                    className="w-full bg-[#1e1e1e] border border-[#3e3e42] rounded px-3 py-1.5 text-xs text-white focus:outline-none focus:border-blue-500 transition-colors"
+                    value={constructorArgs[input.name] || ''}
+                    onChange={(e) => setConstructorArgs(prev => ({ ...prev, [input.name]: e.target.value }))}
+                  />
+                </div>
+              ))}
+            </div>
+          )}
 
           {!compilationResult?.success && (
             <div className="glass p-2 rounded-lg bg-yellow-900/20 border border-yellow-500/30">
@@ -192,9 +220,8 @@ export default function ContractPanel({
 
           {/* Deployment Result */}
           {deploymentResult && (
-            <div className={`glass p-3 rounded-lg border ${
-              deploymentResult.success ? 'border-green-500/50 bg-green-900/20' : 'border-red-500/50 bg-red-900/20'
-            }`}>
+            <div className={`glass p-3 rounded-lg border ${deploymentResult.success ? 'border-green-500/50 bg-green-900/20' : 'border-red-500/50 bg-red-900/20'
+              }`}>
               <div className="flex items-center space-x-2 mb-3">
                 {deploymentResult.success ? (
                   <CheckCircleIcon className="h-4 w-4 text-green-400" />
@@ -205,13 +232,13 @@ export default function ContractPanel({
                   {deploymentResult.success ? '🎉 Contract Deployed!' : '❌ Deployment Failed'}
                 </span>
               </div>
-              
+
               {deploymentResult.error && (
-                <div className="text-xs text-red-300 bg-red-900/30 p-2 rounded">
+                <div className="text-xs text-red-300 bg-red-900/30 p-2 rounded max-h-24 overflow-y-auto">
                   {deploymentResult.error}
                 </div>
               )}
-              
+
               {deploymentResult.success && deploymentResult.networkInfo && (
                 <div className="flex space-x-2">
                   <a
@@ -245,7 +272,7 @@ export default function ContractPanel({
           <h3 className="text-lg font-semibold text-white">
             Contract Interaction
           </h3>
-          
+
           {!deploymentResult?.success ? (
             <div className="glass-card bg-yellow-900/20 border-yellow-500/30">
               <div className="flex items-center space-x-3">
