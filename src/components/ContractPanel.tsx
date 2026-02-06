@@ -200,8 +200,8 @@ export default function ContractPanel({
           {/* Deployment Result */}
           {deploymentResult && (
             <div className={`p-4 rounded-xl border ${deploymentResult.success
-                ? 'bg-green-500/10 border-green-500/30'
-                : 'bg-red-500/10 border-red-500/30'
+              ? 'bg-green-500/10 border-green-500/30'
+              : 'bg-red-500/10 border-red-500/30'
               }`}>
               <div className="flex items-center space-x-3 mb-4">
                 <div className={`p-2 rounded-lg ${deploymentResult.success ? 'bg-green-500/20' : 'bg-red-500/20'}`}>
@@ -246,25 +246,17 @@ export default function ContractPanel({
                     <div className="h-px bg-white/5"></div>
 
                     <div className="flex flex-col space-y-2 pt-1">
-                      <a
-                        href={deploymentResult.networkInfo?.explorerUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="flex items-center justify-between p-2 rounded-lg bg-blue-500/10 hover:bg-blue-500/20 text-blue-400 transition-all border border-blue-500/20"
-                      >
-                        <span className="text-xs font-semibold italic">View on Blockscout</span>
-                        <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" /></svg>
-                      </a>
-
                       {deploymentResult.transactionHash && (
                         <a
-                          href={deploymentResult.networkInfo?.txExplorerUrl}
+                          href={`https://creditcoin-testnet.blockscout.com/tx/${deploymentResult.transactionHash}`}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="flex items-center justify-between p-2 rounded-lg bg-pink-500/10 hover:bg-pink-500/20 text-pink-400 transition-all border border-pink-500/20"
+                          className="flex items-center justify-between p-2.5 rounded-lg bg-blue-500/10 hover:bg-blue-500/20 text-blue-400 transition-all border border-blue-500/20 shadow-sm group"
                         >
-                          <span className="text-xs font-semibold italic">View Transaction</span>
-                          <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" /></svg>
+                          <span className="text-xs font-bold uppercase tracking-wider">View on Explorer</span>
+                          <svg className="w-4 h-4 transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                          </svg>
                         </a>
                       )}
                     </div>

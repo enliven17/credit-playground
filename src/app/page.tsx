@@ -248,7 +248,13 @@ export default function Home() {
                     result = {
                       success: true,
                       contractAddress: address,
-                      transactionHash: contract.deploymentTransaction()?.hash
+                      transactionHash: contract.deploymentTransaction()?.hash,
+                      networkInfo: {
+                        chainId: 102031,
+                        networkName: 'Creditcoin Testnet',
+                        explorerUrl: `https://creditcoin-testnet.blockscout.com/address/${address}`,
+                        txExplorerUrl: `https://creditcoin-testnet.blockscout.com/tx/${contract.deploymentTransaction()?.hash}`
+                      }
                     }
                   } else {
                     const response = await fetch('/api/deploy', {
