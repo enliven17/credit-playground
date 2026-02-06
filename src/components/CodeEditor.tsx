@@ -9,23 +9,43 @@ interface CodeEditorProps {
   language?: string
   height?: string
   onCursorPositionChange?: (line: number, column: number) => void
+  onAskAI?: (selectedCode: string) => void
 }
 
-export default function CodeEditor({ 
-  value, 
-  onChange, 
+export default function CodeEditor({
+  value,
+  onChange,
   language = 'solidity',
   height = '500px',
-  onCursorPositionChange
+  onCursorPositionChange,
+  onAskAI
 }: CodeEditorProps) {
   const editorRef = useRef<any>(null)
 
   function handleEditorDidMount(editor: any, monaco: any) {
     editorRef.current = editor
 
+    // Add "Ask AI Assistant" action to context menu
+    editor.addAction({
+      id: 'ask-ai-assistant',
+      label: 'Ask AI Assistant about this',
+      keybindings: [
+        monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyI,
+      ],
+      contextMenuGroupId: 'navigation',
+      contextMenuOrder: 1.5,
+      run: (ed: any) => {
+        const selection = ed.getSelection()
+        const selectedText = ed.getModel().getValueInRange(selection)
+        if (selectedText && onAskAI) {
+          onAskAI(selectedText)
+        }
+      }
+    })
+
     // Configure Solidity language support
     monaco.languages.register({ id: 'solidity' })
-    
+
     monaco.languages.setMonarchTokensProvider('solidity', {
       tokenizer: {
         root: [

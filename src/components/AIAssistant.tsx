@@ -1,12 +1,13 @@
 'use client'
 
-import { useState, useRef, useEffect } from 'react'
-import { 
-  ChatBubbleLeftRightIcon, 
-  XMarkIcon, 
+import { useState, useRef, useEffect, forwardRef, useImperativeHandle } from 'react'
+import {
+  ChatBubbleLeftRightIcon,
+  XMarkIcon,
   PaperAirplaneIcon,
   SparklesIcon,
-  DocumentTextIcon
+  DocumentTextIcon,
+  CodeBracketIcon
 } from '@heroicons/react/24/outline'
 
 interface Message {
@@ -20,7 +21,11 @@ interface AIAssistantProps {
   contractCode?: string
 }
 
-export default function AIAssistant({ contractCode }: AIAssistantProps) {
+export interface AIAssistantRef {
+  askAboutCode: (code: string) => void
+}
+
+const AIAssistant = forwardRef<AIAssistantRef, AIAssistantProps>(({ contractCode }, ref) => {
   const [isOpen, setIsOpen] = useState(false)
   const [messages, setMessages] = useState<Message[]>([
     {
@@ -34,26 +39,23 @@ export default function AIAssistant({ contractCode }: AIAssistantProps) {
   const [isLoading, setIsLoading] = useState(false)
   const messagesEndRef = useRef<HTMLDivElement>(null)
 
-  const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
-  }
+  useImperativeHandle(ref, () => ({
+    askAboutCode: (code: string) => {
+      setIsOpen(true)
+      const prompt = `I have a question about this part of my code:\n\n\`\`\`solidity\n${code}\n\`\`\`\n\nCan you explain what this does or if there are any issues with it?`
+      handleExternalMessage(prompt)
+    }
+  }))
 
-  useEffect(() => {
-    scrollToBottom()
-  }, [messages])
-
-  const sendMessage = async () => {
-    if (!inputMessage.trim() || isLoading) return
-
+  const handleExternalMessage = async (content: string) => {
     const userMessage: Message = {
       id: Date.now().toString(),
       type: 'user',
-      content: inputMessage,
+      content: content,
       timestamp: new Date()
     }
 
     setMessages(prev => [...prev, userMessage])
-    setInputMessage('')
     setIsLoading(true)
 
     try {
@@ -63,9 +65,9 @@ export default function AIAssistant({ contractCode }: AIAssistantProps) {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          message: inputMessage,
+          message: content,
           contractCode,
-          conversationHistory: messages.slice(-5) // Son 5 mesajı gönder
+          conversationHistory: messages.slice(-5)
         }),
       })
 
@@ -92,6 +94,20 @@ export default function AIAssistant({ contractCode }: AIAssistantProps) {
     }
   }
 
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
+  }
+
+  useEffect(() => {
+    scrollToBottom()
+  }, [messages])
+
+  const sendMessage = async () => {
+    if (!inputMessage.trim() || isLoading) return
+    handleExternalMessage(inputMessage)
+    setInputMessage('')
+  }
+
   const handleKeyPress = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault()
@@ -108,7 +124,6 @@ export default function AIAssistant({ contractCode }: AIAssistantProps) {
 
   return (
     <>
-      {/* AI Assistant Button */}
       <button
         onClick={() => setIsOpen(true)}
         className="fixed bottom-6 right-6 w-14 h-14 bg-gradient-to-r from-purple-500 to-blue-500 hover:from-purple-600 hover:to-blue-600 text-white rounded-full shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center z-50 hover:scale-110"
@@ -116,11 +131,9 @@ export default function AIAssistant({ contractCode }: AIAssistantProps) {
         <SparklesIcon className="h-6 w-6" />
       </button>
 
-      {/* AI Assistant Panel */}
       {isOpen && (
-        <div className="fixed inset-0 z-50 flex items-end justify-end p-4">
-          <div className="w-[450px] h-[700px] bg-[#1e1e1e] border border-white/20 rounded-2xl shadow-2xl flex flex-col overflow-hidden">
-            {/* Header */}
+        <div className="fixed inset-0 z-50 flex items-end justify-end p-4 pointer-events-none">
+          <div className="w-[450px] h-[700px] bg-[#1e1e1e] border border-white/20 rounded-2xl shadow-2xl flex flex-col overflow-hidden pointer-events-auto">
             <div className="bg-gradient-to-r from-purple-500 to-blue-500 p-4 flex items-center justify-between">
               <div className="flex items-center space-x-3">
                 <SparklesIcon className="h-6 w-6 text-white" />
@@ -137,7 +150,6 @@ export default function AIAssistant({ contractCode }: AIAssistantProps) {
               </button>
             </div>
 
-            {/* Messages */}
             <div className="flex-1 overflow-y-auto p-4 space-y-4">
               {messages.map((message) => (
                 <div
@@ -145,11 +157,10 @@ export default function AIAssistant({ contractCode }: AIAssistantProps) {
                   className={`flex ${message.type === 'user' ? 'justify-end' : 'justify-start'}`}
                 >
                   <div
-                    className={`max-w-[80%] p-3 rounded-2xl text-sm ${
-                      message.type === 'user'
-                        ? 'bg-blue-500 text-white'
-                        : 'bg-[#2d2d30] text-white border border-white/10'
-                    }`}
+                    className={`max-w-[80%] p-3 rounded-2xl text-sm ${message.type === 'user'
+                        ? 'bg-blue-600 text-white'
+                        : 'bg-[#2d2d30] text-white border border-white/10 shadow-sm'
+                      }`}
                   >
                     <p className="whitespace-pre-wrap">{message.content}</p>
                     <p className="text-xs opacity-60 mt-1">
@@ -158,7 +169,7 @@ export default function AIAssistant({ contractCode }: AIAssistantProps) {
                   </div>
                 </div>
               ))}
-              
+
               {isLoading && (
                 <div className="flex justify-start">
                   <div className="bg-[#2d2d30] text-white border border-white/10 p-3 rounded-2xl">
@@ -173,27 +184,25 @@ export default function AIAssistant({ contractCode }: AIAssistantProps) {
               <div ref={messagesEndRef} />
             </div>
 
-            {/* Quick Actions */}
-            {messages.length === 1 && (
-              <div className="p-4 border-t border-white/10">
-                <p className="text-white/60 text-xs mb-2">Quick actions:</p>
+            {messages.length <= 2 && !isLoading && (
+              <div className="p-4 border-t border-white/10 bg-[#252526]">
+                <p className="text-white/60 text-xs mb-3 font-medium uppercase tracking-wider">Quick actions</p>
                 <div className="grid grid-cols-2 gap-2">
                   {quickActions.map((action, index) => (
                     <button
                       key={index}
-                      onClick={() => setInputMessage(action.text)}
-                      className="text-left p-2 bg-[#2d2d30] hover:bg-[#3e3e42] rounded-lg text-xs text-white/80 hover:text-white transition-colors border border-white/10"
+                      onClick={() => handleExternalMessage(action.text)}
+                      className="text-left p-2.5 bg-[#2d2d30] hover:bg-[#3e3e42] rounded-xl text-xs text-white/80 hover:text-white transition-all border border-white/10 hover:border-white/20 active:scale-95 flex items-center space-x-2"
                     >
-                      <action.icon className="h-3 w-3 inline mr-1" />
-                      {action.text}
+                      <action.icon className="h-3.5 w-3.5 text-blue-400" />
+                      <span>{action.text}</span>
                     </button>
                   ))}
                 </div>
               </div>
             )}
 
-            {/* Input */}
-            <div className="p-4 border-t border-white/10">
+            <div className="p-4 border-t border-white/10 bg-[#252526]">
               <div className="flex space-x-2">
                 <input
                   type="text"
@@ -201,15 +210,15 @@ export default function AIAssistant({ contractCode }: AIAssistantProps) {
                   onChange={(e) => setInputMessage(e.target.value)}
                   onKeyPress={handleKeyPress}
                   placeholder="Ask me anything about Creditcoin..."
-                  className="flex-1 bg-[#2d2d30] text-white placeholder-white/50 border border-white/20 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-blue-500"
+                  className="flex-1 bg-[#1e1e1e] text-white placeholder-white/30 border border-white/10 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-blue-500/50 focus:ring-1 focus:ring-blue-500/50 transition-all"
                   disabled={isLoading}
                 />
                 <button
                   onClick={sendMessage}
                   disabled={!inputMessage.trim() || isLoading}
-                  className="bg-blue-500 hover:bg-blue-600 disabled:opacity-50 disabled:cursor-not-allowed text-white p-2 rounded-lg transition-colors"
+                  className="bg-blue-600 hover:bg-blue-500 disabled:opacity-30 disabled:cursor-not-allowed text-white p-2.5 rounded-xl transition-all active:scale-90"
                 >
-                  <PaperAirplaneIcon className="h-4 w-4" />
+                  <PaperAirplaneIcon className="h-5 w-5" />
                 </button>
               </div>
             </div>
@@ -218,4 +227,7 @@ export default function AIAssistant({ contractCode }: AIAssistantProps) {
       )}
     </>
   )
-}
+})
+
+AIAssistant.displayName = 'AIAssistant'
+export default AIAssistant
