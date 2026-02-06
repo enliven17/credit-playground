@@ -56,8 +56,8 @@ export default function ContractPanel({
             key={id}
             onClick={() => setActiveTab(id as any)}
             className={`flex items-center space-x-2 px-3 py-2 text-xs font-medium transition-colors border-b-2 ${activeTab === id
-                ? 'border-blue-500 text-white bg-[#1e1e1e]'
-                : 'border-transparent text-gray-400 hover:text-white hover:bg-[#3e3e42]'
+              ? 'border-blue-500 text-white bg-[#1e1e1e]'
+              : 'border-transparent text-gray-400 hover:text-white hover:bg-[#3e3e42]'
               }`}
           >
             <Icon className="h-4 w-4" />
@@ -197,68 +197,78 @@ export default function ContractPanel({
             </div>
           )}
 
-          {/* Network Info */}
-          <div className="glass-card bg-blue-900/20 border-blue-500/30 hover-glow">
-            <h4 className="font-semibold text-blue-200 mb-4 flex items-center space-x-2">
-              <div className="status-online"></div>
-              <span>Creditcoin Testnet</span>
-            </h4>
-            <div className="text-sm text-blue-300 space-y-2">
-              <div className="flex justify-between">
-                <span>Chain ID:</span>
-                <span className="font-mono">102031</span>
-              </div>
-              <div className="flex justify-between">
-                <span>Network:</span>
-                <span className="font-mono">Testnet</span>
-              </div>
-              <div className="text-xs text-blue-400 mt-3">
-                🔗 Connected to live testnet
-              </div>
-            </div>
-          </div>
-
           {/* Deployment Result */}
           {deploymentResult && (
-            <div className={`glass p-3 rounded-lg border ${deploymentResult.success ? 'border-green-500/50 bg-green-900/20' : 'border-red-500/50 bg-red-900/20'
+            <div className={`p-4 rounded-xl border ${deploymentResult.success
+                ? 'bg-green-500/10 border-green-500/30'
+                : 'bg-red-500/10 border-red-500/30'
               }`}>
-              <div className="flex items-center space-x-2 mb-3">
-                {deploymentResult.success ? (
-                  <CheckCircleIcon className="h-4 w-4 text-green-400" />
-                ) : (
-                  <XCircleIcon className="h-4 w-4 text-red-400" />
-                )}
-                <span className="font-medium text-white text-sm">
-                  {deploymentResult.success ? '🎉 Contract Deployed!' : '❌ Deployment Failed'}
-                </span>
+              <div className="flex items-center space-x-3 mb-4">
+                <div className={`p-2 rounded-lg ${deploymentResult.success ? 'bg-green-500/20' : 'bg-red-500/20'}`}>
+                  {deploymentResult.success ? (
+                    <RocketLaunchIcon className="h-5 w-5 text-green-400" />
+                  ) : (
+                    <XCircleIcon className="h-5 w-5 text-red-400" />
+                  )}
+                </div>
+                <div>
+                  <h4 className="text-sm font-bold text-white">
+                    {deploymentResult.success ? 'Contract Deployed' : 'Deployment Failed'}
+                  </h4>
+                  <p className="text-[10px] text-gray-400 uppercase tracking-widest mt-0.5">
+                    {deploymentResult.success ? 'Creditcoin Testnet' : 'Error details below'}
+                  </p>
+                </div>
               </div>
 
               {deploymentResult.error && (
-                <div className="text-xs text-red-300 bg-red-900/30 p-2 rounded max-h-24 overflow-y-auto">
+                <div className="text-xs text-red-300 bg-red-900/30 p-3 rounded-lg border border-red-500/20 max-h-32 overflow-y-auto font-mono">
                   {deploymentResult.error}
                 </div>
               )}
 
-              {deploymentResult.success && deploymentResult.networkInfo && (
-                <div className="flex space-x-2">
-                  <a
-                    href={deploymentResult.networkInfo.explorerUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex-1 text-center px-2 py-1 text-xs bg-white/10 hover:bg-white/20 rounded transition-colors"
-                  >
-                    📄 Contract
-                  </a>
-                  {deploymentResult.networkInfo.txExplorerUrl && (
-                    <a
-                      href={deploymentResult.networkInfo.txExplorerUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex-1 text-center px-2 py-1 text-xs bg-white/10 hover:bg-white/20 rounded transition-colors"
-                    >
-                      🔗 Transaction
-                    </a>
-                  )}
+              {deploymentResult.success && (
+                <div className="space-y-2.5">
+                  <div className="bg-[#1e1e1e] p-3 rounded-lg border border-white/5 space-y-3">
+                    <div className="flex items-center justify-between group">
+                      <div className="flex flex-col">
+                        <span className="text-[10px] text-gray-500 uppercase font-bold tracking-tight">Contract Address</span>
+                        <span className="text-xs text-gray-300 font-mono truncate max-w-[180px]">{deploymentResult.contractAddress}</span>
+                      </div>
+                      <button
+                        onClick={() => copyToClipboard(deploymentResult.contractAddress)}
+                        className="p-1.5 hover:bg-white/5 rounded text-gray-500 hover:text-white transition-all"
+                      >
+                        <ClipboardDocumentIcon className="h-4 w-4" />
+                      </button>
+                    </div>
+
+                    <div className="h-px bg-white/5"></div>
+
+                    <div className="flex flex-col space-y-2 pt-1">
+                      <a
+                        href={deploymentResult.networkInfo?.explorerUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center justify-between p-2 rounded-lg bg-blue-500/10 hover:bg-blue-500/20 text-blue-400 transition-all border border-blue-500/20"
+                      >
+                        <span className="text-xs font-semibold italic">View on Blockscout</span>
+                        <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" /></svg>
+                      </a>
+
+                      {deploymentResult.transactionHash && (
+                        <a
+                          href={deploymentResult.networkInfo?.txExplorerUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="flex items-center justify-between p-2 rounded-lg bg-pink-500/10 hover:bg-pink-500/20 text-pink-400 transition-all border border-pink-500/20"
+                        >
+                          <span className="text-xs font-semibold italic">View Transaction</span>
+                          <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" /></svg>
+                        </a>
+                      )}
+                    </div>
+                  </div>
                 </div>
               )}
             </div>
