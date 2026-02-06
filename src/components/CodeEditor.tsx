@@ -1,7 +1,7 @@
 'use client'
 
 import { Editor } from '@monaco-editor/react'
-import { useEffect, useRef } from 'react'
+import { useRef } from 'react'
 
 interface CodeEditorProps {
   value: string
@@ -16,8 +16,7 @@ export default function CodeEditor({
   value,
   onChange,
   language = 'solidity',
-  height = '500px',
-  onCursorPositionChange,
+  height = '100%',
   onAskAI
 }: CodeEditorProps) {
   const editorRef = useRef<any>(null)
@@ -94,39 +93,39 @@ export default function CodeEditor({
   }
 
   return (
-    <div className="relative">
-      <div className="glass border border-white/20 rounded-2xl overflow-hidden shadow-2xl">
-        <Editor
-          height={height}
-          language={language}
-          value={value}
-          onChange={(value) => onChange(value || '')}
-          onMount={handleEditorDidMount}
-          options={{
-            minimap: { enabled: false },
-            fontSize: 15,
-            lineNumbers: 'on',
-            roundedSelection: false,
-            scrollBeyondLastLine: false,
-            automaticLayout: true,
-            tabSize: 2,
-            insertSpaces: true,
-            wordWrap: 'on',
-            contextmenu: true,
-            selectOnLineNumbers: true,
-            glyphMargin: false,
-            folding: true,
-            lineDecorationsWidth: 12,
-            lineNumbersMinChars: 3,
-            fontFamily: 'JetBrains Mono, Fira Code, Monaco, Consolas, monospace',
-            fontLigatures: true,
-            cursorBlinking: 'smooth',
-            cursorSmoothCaretAnimation: 'on',
-            smoothScrolling: true,
-            padding: { top: 20, bottom: 20 },
-          }}
-        />
-      </div>
+    <div className="absolute inset-0 w-full h-full">
+      <Editor
+        height="100%"
+        width="100%"
+        language={language}
+        value={value}
+        onChange={(value) => onChange(value || '')}
+        onMount={handleEditorDidMount}
+        theme="vs-dark"
+        options={{
+          minimap: { enabled: false },
+          fontSize: 14,
+          lineNumbers: 'on',
+          roundedSelection: false,
+          scrollBeyondLastLine: false,
+          automaticLayout: true,
+          tabSize: 2,
+          insertSpaces: true,
+          wordWrap: 'on',
+          contextmenu: true,
+          selectOnLineNumbers: true,
+          glyphMargin: false,
+          folding: true,
+          lineDecorationsWidth: 10,
+          lineNumbersMinChars: 3,
+          fontFamily: "'JetBrains Mono', 'Fira Code', 'Monaco', 'Consolas', monospace",
+          cursorBlinking: 'smooth',
+          cursorSmoothCaretAnimation: 'on',
+          smoothScrolling: true,
+          padding: { top: 10, bottom: 10 },
+          fixedOverflowWidgets: true,
+        }}
+      />
     </div>
   )
 }
